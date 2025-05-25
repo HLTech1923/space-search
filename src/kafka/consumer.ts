@@ -2,8 +2,8 @@ import { Kafka } from "kafkajs";
 import { Supplier } from "../models/Supplier";
 
 const kafka = new Kafka({
-  clientId: "1f31221a5a702c95a2eeaebf0ac3152c3b3956de7525d119a8b3b675dc494502",
-  brokers: ["localhost:9092"],
+  clientId: process.env.KAFKA_ID,
+  brokers: [process.env.KAFKA_HOST as string],
 });
 
 const consumer = kafka.consumer({ groupId: "supplier-group" });
