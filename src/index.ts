@@ -13,7 +13,7 @@ app.use("/api", supplierRoutes);
 
 mongoose
   .connect(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost:${process.env.PORT}`,
+    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@mongodb:27017`,
     {
       dbName: "test",
     }
