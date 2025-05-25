@@ -17,19 +17,9 @@ services:
       KAFKA_HOST: ${KAFKA_HOST}   # should be kafka:9092 for internal networking
     depends_on:
       - mongodb
-      - zookeeper
     restart: always
     networks:
-      - app-network
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-    restart: always
-    networks:
-      - app-network
+      - space-be_app-network
 
   mongodb:
     image: mongo:8.0.10-rc0
@@ -43,26 +33,11 @@ services:
       - mongo_data:/data/db
     restart: always
     networks:
-      - app-network
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo_ui
-    ports:
-      - "8081:8081"
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASS}
-      ME_CONFIG_MONGODB_SERVER: mongodb
-    depends_on:
-      - mongodb
-    restart: always
-    networks:
-      - app-network
+      - space-be_app-network
 
 volumes:
   mongo_data:
 
 networks:
-  app-network:
-    driver: bridge
+  space-be_app-network:
+    external: true
