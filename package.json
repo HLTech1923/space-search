@@ -4,7 +4,8 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "ts-node-dev src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "dependencies": {
     "dotenv": "^16.0.0",

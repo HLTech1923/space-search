@@ -1,12 +1,35 @@
 version: '3.8'
 
 services:
+  express-mongo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express_mongo_app
+    ports:
+      - "3001:3001"
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      PORT: ${PORT}
+      APP_PORT: ${APP_PORT}
+      KAFKA_ID: ${KAFKA_ID}
+      KAFKA_HOST: ${KAFKA_HOST}   # should be kafka:9092 for internal networking
+    depends_on:
+      - mongodb
+      - zookeeper
+    restart: always
+    networks:
+      - app-network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     restart: always
+    networks:
+      - app-network
 
   mongodb:
     image: mongo:8.0.10-rc0
@@ -19,6 +42,8 @@ services:
     volumes:
       - mongo_data:/data/db
     restart: always
+    networks:
+      - app-network
 
   mongo-express:
     image: mongo-express
@@ -32,6 +57,12 @@ services:
     depends_on:
       - mongodb
     restart: always
+    networks:
+      - app-network
 
 volumes:
   mongo_data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -20,17 +20,18 @@ export const startKafkaConsumer = async () => {
         const existing = await Supplier.findOne({
           vat_number: data.vat_number,
         });
-
+        console.log(data);
+        
         if (data.action === "delete") {
           if (existing) {
-            await Supplier.deleteOne({ vat_number: data.vat_number });
+            // await Supplier.deleteOne({ vat_number: data.vat_number });
             console.log("Deleted supplier with VAT:", data.vat_number);
           }
         } else if (existing) {
-          await Supplier.updateOne({ vat_number: data.vat_number }, data);
+          // await Supplier.updateOne({ vat_number: data.vat_number }, data);
           console.log("Updated supplier with VAT:", data.vat_number);
         } else {
-          await Supplier.create(data);
+          // await Supplier.create(data);
           console.log("Inserted new supplier:", data);
         }
       }
