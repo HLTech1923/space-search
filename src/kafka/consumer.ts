@@ -59,3 +59,11 @@ export const startKafkaConsumer = async () => {
   });
 };
 
+export const shutdownKafkaConsumer = async () => {
+  try {
+    await consumer.disconnect();
+    console.log("Kafka consumer disconnected");
+  } catch (error) {
+    console.error("Failed to disconnect Kafka consumer", error);
+  }
+};

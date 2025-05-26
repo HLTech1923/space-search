@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import supplierRoutes from "./api/supplier";
-import { startKafkaConsumer } from "./kafka/consumer";
+import { startKafkaConsumer, shutdownKafkaConsumer } from "./kafka/consumer";
 import cors from 'cors';
 
 dotenv.config();
@@ -30,6 +30,7 @@ mongoose
   });
 
 export default app;
+export { shutdownKafkaConsumer };
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
