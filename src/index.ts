@@ -15,7 +15,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
-app.use("v1/api", supplierRoutes);
+app.use("/v1/api", supplierRoutes);
 
 mongoose
   .connect(
