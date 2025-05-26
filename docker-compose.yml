@@ -14,12 +14,12 @@ services:
       PORT: ${PORT}
       APP_PORT: ${APP_PORT}
       KAFKA_ID: ${KAFKA_ID}
-      KAFKA_HOST: ${KAFKA_HOST}   # should be kafka:9092 for internal networking
+      KAFKA_HOST: ${KAFKA_HOST}
     depends_on:
       - mongodb
     restart: always
     networks:
-      - space-be_app-network
+      - ${FOLDER_NAME_OF_MAIN_BE}_app-network
 
   mongodb:
     image: mongo:8.0.10-rc0
@@ -33,11 +33,11 @@ services:
       - mongo_data:/data/db
     restart: always
     networks:
-      - space-be_app-network
+      - ${FOLDER_NAME_OF_MAIN_BE}_app-network
 
 volumes:
   mongo_data:
 
 networks:
-  space-be_app-network:
+  ${FOLDER_NAME_OF_MAIN_BE}_app-network:
     external: true

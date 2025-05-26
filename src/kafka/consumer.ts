@@ -3,10 +3,26 @@ import { Supplier } from "../models/Supplier";
 
 const kafka = new Kafka({
   clientId: process.env.KAFKA_ID,
-  brokers: [process.env.KAFKA_HOST as string],
+  brokers: [`${process.env.KAFKA_HOST || "kafka:9092"}`],
 });
 
 const consumer = kafka.consumer({ groupId: "supplier-group" });
+
+async function retryOperation(operation: () => Promise<any>, retries = 3) {
+  let lastError;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      console.warn(`Attempt ${attempt} failed:`, error);
+      if (attempt < retries) {
+        await new Promise((res) => setTimeout(res, 1000)); // Optional delay between retries
+      }
+    }
+  }
+  throw lastError;
+}
 
 export const startKafkaConsumer = async () => {
   await consumer.connect();
@@ -15,24 +31,28 @@ export const startKafkaConsumer = async () => {
   await consumer.run({
     eachMessage: async ({ message }) => {
       if (message.value) {
-        const data = JSON.parse(message.value.toString());
+        try {
+          const queue = JSON.parse(message.value.toString());
 
-        const existing = await Supplier.findOne({
-          vat_number: data.vat_number,
-        });
-        console.log(data);
-        
-        if (data.action === "delete") {
-          if (existing) {
-            // await Supplier.deleteOne({ vat_number: data.vat_number });
-            console.log("Deleted supplier with VAT:", data.vat_number);
+          const existing = await Supplier.findOne({
+            vat_number: queue.data.vat_number,
+          });
+
+          if (queue.action === "delete") {
+            if (existing) {
+              await retryOperation(() =>
+                Supplier.deleteOne({ vat_number: queue.data.vat_number })
+              );
+            }
+          } else if (existing) {
+            await retryOperation(() =>
+              Supplier.updateOne({ vat_number: queue.data.vat_number }, queue.data)
+            );
+          } else {
+            await retryOperation(() => Supplier.create(queue));
           }
-        } else if (existing) {
-          // await Supplier.updateOne({ vat_number: data.vat_number }, data);
-          console.log("Updated supplier with VAT:", data.vat_number);
-        } else {
-          // await Supplier.create(data);
-          console.log("Inserted new supplier:", data);
+        } catch (error) {
+          console.error(error);
         }
       }
     },
