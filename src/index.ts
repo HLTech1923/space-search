@@ -2,13 +2,19 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import supplierRoutes from "./api/supplier";
-import { startKafkaConsumer } from "./kafka/consumer";
+import { startKafkaConsumer, shutdownKafkaConsumer } from "./kafka/consumer";
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 const port = process.env.APP_PORT || 3001;
 
 app.use(express.json());
+app.use(cors({
+  origin: "*", // Replace with your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+
 app.use("/v1/api", supplierRoutes);
 
 mongoose
@@ -24,6 +30,7 @@ mongoose
   });
 
 export default app;
+export { shutdownKafkaConsumer };
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
