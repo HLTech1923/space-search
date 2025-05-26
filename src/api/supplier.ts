@@ -3,7 +3,7 @@ import { Supplier } from "../models/Supplier";
 
 const router = express.Router();
 
-router.get("/suppliers", async (req, res) => {
+router.post("/suppliers", async (req, res) => {
   const {
     page = 1,
     per_page = 10,
@@ -11,7 +11,7 @@ router.get("/suppliers", async (req, res) => {
     sort_by = "name",
     sort_desc = "false",
     ...filters
-  } = req.query;
+  } = req.body;
   const query: any = {};
 
   if (keyword) {
