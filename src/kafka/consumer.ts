@@ -49,7 +49,7 @@ export const startKafkaConsumer = async () => {
               Supplier.updateOne({ vat_number: queue.data.vat_number }, queue.data)
             );
           } else {
-            await retryOperation(() => Supplier.create(queue));
+            await retryOperation(() => Supplier.create(queue.data));
           }
         } catch (error) {
           console.error(error);

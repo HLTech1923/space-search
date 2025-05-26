@@ -39,5 +39,5 @@ volumes:
   mongo_data:
 
 networks:
-  ${FOLDER_NAME_OF_MAIN_BE}_app-network:
+  space-be_app-network:
     external: true
