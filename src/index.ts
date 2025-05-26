@@ -7,7 +7,7 @@ import cors from 'cors';
 
 dotenv.config();
 const app = express();
-const port = process.env.APP_PORT || 3000;
+const port = process.env.APP_PORT || 3001;
 
 app.use(express.json());
 app.use(cors({
@@ -15,7 +15,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
-app.use("/api", supplierRoutes);
+app.use("v1/api", supplierRoutes);
 
 mongoose
   .connect(
