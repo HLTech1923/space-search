@@ -9,7 +9,7 @@ router.post("/suppliers", async (req, res) => {
     per_page = 10,
     keyword = "",
     sort_by = "name",
-    sort_desc = "false",
+    sort_desc = false,
     ...filters
   } = req.body;
   const query: any = { vat_number: { $exists: true } };
@@ -30,7 +30,7 @@ router.post("/suppliers", async (req, res) => {
   }
 
   const sortOptions: any = {};
-  sortOptions[sort_by as string] = sort_desc === "true" ? -1 : 1;
+  sortOptions[sort_by as string] = sort_desc === true ? -1 : 1;
 
   const total = await Supplier.countDocuments(query);
   const data = await Supplier.find(query)
