@@ -12,7 +12,7 @@ router.post("/suppliers", async (req, res) => {
     sort_desc = "false",
     ...filters
   } = req.body;
-  const query: any = {};
+  const query: any = { vat_number: { $exists: true } };
 
   if (keyword) {
     query.$or = [
