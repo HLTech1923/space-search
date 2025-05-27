@@ -34,7 +34,7 @@ DB_USER=admin
 DB_PASS=admin123
 APP_PORT=3001
 
-NODE_ENV=test npm test
+NODE_ENV=test
 
 KAFKA_ID=KARKA_ID_IN_CONTAINER
 KAFKA_HOST=kafka:9092
@@ -123,8 +123,9 @@ mongo-kafka-api/
     │   └── consumer.ts     # Kafka consumer logic
     ├── models/
     │   └── Supplier.ts     # Supplier model definition
-    └── api/
-        └── supplier.ts     # API routes for handling suppliers
+    ├── api/
+    │    └── supplier.ts    # API routes for handling
+    └── test/               # Unit tests
 ```
 
 ---
