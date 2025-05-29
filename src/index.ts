@@ -7,7 +7,7 @@ import cors from 'cors';
 
 dotenv.config();
 const app = express();
-const port = process.env.APP_PORT || 3001;
+const port = process.env.APP_PORT ? Number(process.env.APP_PORT) : 3001;
 
 app.use(express.json());
 app.use(cors({
@@ -33,7 +33,7 @@ export default app;
 export { shutdownKafkaConsumer };
 
 if (process.env.NODE_ENV !== "test") {
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening on port ${port}`);
   });
 }
